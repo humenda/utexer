@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="de">
+<head>
+    <meta http-equiv="Content-Language" content="en" />
+    <meta name="Modified" content="2013-7-31 11:49" />
+    <title>uTeXer</title>
+    <meta name="Keywords" content="Sebastian Humenda, free software, utexer, pdf, pdftotext, unicode, latex, blind</meta>
+    <meta name="author" content="Sebastian Humenda" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        body { color: black; background-color: white;  max-width: 1080px;
+            margin-left: 0; margin-right: auto; padding-left: 15px;
+            padding-right: 15px;
+            text-align:justify;}
+        pre { background-color: #e0e0e0; padding: 0.4cm; overflow: auto; }
+        .note { background-color: #ff0500; font-style:bold; }
+        div.inlineverbatim { color: #08ffff; font-size: 100%; font-family:monospace; }
+        .motto { color: #0500ff; font-style:bold; }
+        .red { color: #ff0000; font-style:bold; }
+        .postedby { color: #191970; }
+        li { margin-top:.5em; margin-bottom:.5em }
+        h1 { font-family: 'Trykker'; font-size: 290% }
+        h2 { font-family: 'Trykker'; font-size: 200% }
+        h3 { font-family: 'Trykker'; font-size: 160% }
+        h4 { font-family: 'Trykker'; font-size: 130% }
+        tb1 { width:"80%"; }
+        tb2 { width:"16%"; }
+        .navbar { padding-top: 5px; padding-bottom: 5px; padding-left: 5px;
+            padding-right: 5px; font-size: 80%; background-color:lightgray; }
+        .data { width: 80%; text-align: justify; padding-top: 5px;
+            padding-bottom: 5px; padding-left: 5px; padding-right: 5px; }
+        @media handheld {
+            .data { width: 100%; }
+        }
+        </style>
+</head>
+<body>
+<p class="note"><em>Note: this site is also available in German on 
+<a
+href="http://www.crustulus.de/projects/utexer.de.html">http://www.crustulus.de/projects/utexer.de.html</a></em></p>
+
+<h1 id="utexer">uTeXer</h1>
+<h2 id="about-utexer">About uTeXer</h2>
+<p>uTeXer is an helper script written in Python to translate unicode math signs and Latin ligatures into plain text to make them readible for blind computer users. It can be used for:</p>
+<ul>
+<li>translating formulas from web sites or from PDF's into LaTeX signs</li>
+<li>renice the output of the text versions of PDF's (generated e.g. by pdftotext from popplerutils); often Latin ligatures or other those make texts harder to read.</li>
+</ul>
+<p>So this allows blind users the first time to download papers or other scientific stuff and read it without sighted assistance.</p>
+<h2 id="installation">Installation</h2>
+<p>You need a working python3 installation. You can either use</p>
+<p>./install</p>
+<p>which installs the program to /usr/local/*, or set PREFIX=&quot;/&quot; to install it to /bin and /share directly (and /opt or /usr respectively).</p>
+<p>You can run it also directly from the source(s).</p>
+<h2 id="using-utexer">Using uTeXer</h2>
+<p>uTeXer is a simple program, the help screen should explain most:</p>
+<pre><code>Usage: utexer [options] INPUTFILE
+
+Options:
+  -h, --help            show this help message and exit
+  -o FILE, --output=FILE
+                        set output file (if unset, overwrite input file)
+  -l, --ligature        replace ligatures through normal letters (at least in
+                        Latin languages where they are only for better
+                        readibility)
+  -p, --pdftotext       Replace some signs generated just by PDFtotext</code></pre>
+<h2 id="where-do-the-latex-commands-come-from-how-do-i-customize-them">Where do the LaTeX-commands come from / how do I customize them?</h2>
+<p>The initial unicode table was downloaded from:</p>
+<p>http://www.w3.org/Math/characters/unicode.xml</p>
+<p>At this point of writing, LaTeX-commands can just be overwritten by replacing them in unicode.xml, located next to the script or under /usr/share/utexer/unicode.xml.</p>
+<h2 id="known-issues">Known Issues</h2>
+<p>As said before, uTeXer can not fully translate formulas. Especially formulas who are bigger than a line, e.g. a fraction, indices and powers are not recognized, just because they are not marked in unicode, but by changing their relative height. This only matters for PDF output, ob web pages, people often use tags to indicate subscripts and so on.</p>
+<p>Over/underlines are also lost!</p>
+
+
+</body>
+</html>
