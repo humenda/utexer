@@ -44,7 +44,7 @@ uTeXer is a simple program, the help screen should explain most:
                             readibility)
       -p, --pdftotext       Replace some signs generated just by PDFtotext
 
-Where do the LaTeX-commands come from / how do I customize them?
+Where Do The LaTeX-commands Come From / How Do I Customize Them?
 ================================================================
 
 The initial unicode table was downloaded from:
