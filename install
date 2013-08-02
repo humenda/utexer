@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -e
+
+if [ -z "$PREFIX" ]
+then
+    PREFIX=/usr/local
+fi
+
+# multiple slashes do not hurt (by design!)
+SHAREDIR="$PREFIX/share/utexer"
+BINDIR="$PREFIX/bin"
+
+mkdir -p $SHAREDIR
+mkdir -p $BINDIR
+
+cp utexer.py $BINDIR/
+mv $BINDIR/utexer.py $BINDIR/utexer
+chmod a+x $BINDIR/utexer
+
+cp unicode.xml $SHAREDIR
+

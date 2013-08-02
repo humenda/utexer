@@ -3,6 +3,12 @@ import sys, os
 from optparse import OptionParser
 import xml.etree.ElementTree as ET
 
+# A dictionary of unicode signs which one can get when using pdftotext."
+
+PDFTOTEXT = {0xFF:'ß', 0x1C:'fi'}
+
+################################################################################
+
 class wholeProgram():
     """The whole program in a class. The program is too small for more classes
 ;-)."""
@@ -15,8 +21,12 @@ class wholeProgram():
                   metavar="FILE")
         parser.add_option("-l", "--ligature",
                   action="store_true", dest="ligature", default=False,
-                  help='''replace ligatures through normal letters (at least in
-Latin languages where they are only for better readibility)''')
+                  help='replace ligatures through normal letters (at least in'+\
+                          ' Latin languages where they are only for better '+\
+                          'readibility)')
+        parser.add_option("-p", "--pdftotext",
+                  action="store_true", dest="pdftotext", default=False,
+                  help='Replace some signs generated just by PDFtotext')
         (self.options, self.args) = parser.parse_args()
         if(len(self.args) < 1):
             print("You must at least specify an input file.\n")
@@ -31,8 +41,18 @@ Latin languages where they are only for better readibility)''')
     def setup_table(self):
         """Set up unicode translation table by parsing XML file and adding
 (Latin) ligatures, if wished."""
-        root = ET.fromstring( open( os.path.join( \
-                os.path.dirname(os.path.realpath(__file__)), 'unicode.xml')).read())
+        # search unicode.xml in the same directory:
+        spath = os.path.dirname(os.path.realpath(__file__))
+        if(os.path.exists(os.path.join(spath, 'unicode.xml'))):
+            unicodexml = os.path.join(spath, 'unicode.xml')
+        elif(os.path.exists(os.path.join(spath, '..', 'share', 'utexer',
+                'unicode.xml'))):
+            unicodexml = os.path.join(spath,'..','share','utexer','unicode.xml')
+        else:
+            print("Error: unicode.xml not found!")
+            sys.exit(127)
+
+        root = ET.fromstring( open( unicodexml ).read())
         for child in root:
             if(child.tag == 'character'):
                 attr = child.attrib
@@ -52,6 +72,8 @@ Latin languages where they are only for better readibility)''')
             self.T[64258] = 'fl'
             self.T[64259] = 'ffi'
             self.T[64259] = 'ffl'
+        if(self.options.pdftotext):
+            self.T.update(PDFTOTEXT)
 
     def translate(self):
         """Use self.t to translate all unicode sequences through
@@ -60,7 +82,12 @@ LaTeX-equivalents."""
         cnt = cnt.translate(self.T)
         open(self.output,'w').write( cnt )
 
-if __name__ == '__main__':
+
+def main():
     p = wholeProgram()
     p.setup_table()
     p.translate()
+
+if __name__ == '__main__':
+    main()
+
