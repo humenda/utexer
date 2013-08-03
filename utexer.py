@@ -3,13 +3,15 @@ import sys, os
 from optparse import OptionParser
 import xml.etree.ElementTree as ET
 
+"""uTeXer -- replace unicode signs through LaTeX equivalents."""
+
 # A dictionary of unicode signs which one can get when using pdftotext."
 
 PDFTOTEXT = {0xFF:'ß', 0x1C:'fi'}
 
 ################################################################################
 
-class wholeProgram():
+class WholeProgram():
     """The whole program in a class. The program is too small for more classes
 ;-)."""
     def __init__(self):
@@ -19,6 +21,10 @@ class wholeProgram():
         parser.add_option("-o", "--output", dest="output",
                   help="set output file (if unset, overwrite input file)",
                   metavar="FILE")
+        parser.add_option("-u", "--userdict", dest="userdict",
+                  help="set path to user-defined replacements/additions for "+\
+                          "unicode mappings (format described in README)",
+                  metavar="FILE", default=None)
         parser.add_option("-l", "--ligature",
                   action="store_true", dest="ligature", default=False,
                   help='replace ligatures through normal letters (at least in'+\
@@ -32,11 +38,13 @@ class wholeProgram():
             print("You must at least specify an input file.\n")
             parser.print_help()
             sys.exit(0)
-        if(self.options.output == None): self.output = self.args[0]
-        else: self.output = self.options.output
+        if(self.options.output == None):
+            self.output = self.args[0]
+        else:
+            self.output = self.options.output
 
         # translation table
-        self.T = {}
+        self.table = {}
 
     def setup_table(self):
         """Set up unicode translation table by parsing XML file and adding
@@ -47,7 +55,8 @@ class wholeProgram():
             unicodexml = os.path.join(spath, 'unicode.xml')
         elif(os.path.exists(os.path.join(spath, '..', 'share', 'utexer',
                 'unicode.xml'))):
-            unicodexml = os.path.join(spath,'..','share','utexer','unicode.xml')
+            unicodexml = os.path.join(spath, '..', 'share', 'utexer', \
+                        'unicode.xml')
         else:
             print("Error: unicode.xml not found!")
             sys.exit(127)
@@ -58,35 +67,45 @@ class wholeProgram():
                 attr = child.attrib
                 try:
                     if(attr['mode'] == 'math'):
-                        latex = [e for e in child.getchildren() if(e.tag == 'latex')][0]
-                        id = attr['id'][1:]
-                        if(id.find('-')>0): ids=id[1:].split('-')
-                        else: ids = [id]
-                        for id in ids:
-                            self.T[int(id, 16)] = latex.text
+                        latex = [e for e in child.getchildren() \
+                                    if(e.tag == 'latex')][0]
+                        i_d = attr['id'][1:]
+                        if(i_d.find('-')>0):
+                            ids = i_d[1:].split('-')
+                        else:
+                            ids = [i_d]
+                        for i_d in ids:
+                            self.table[int(i_d, 16)] = latex.text
                 except (KeyError, IndexError):
                     continue
         # translate ligatures?
         if(self.options.ligature):
-            self.T[64256] = 'ff'
-            self.T[64258] = 'fl'
-            self.T[64259] = 'ffi'
-            self.T[64259] = 'ffl'
+            self.table[64256] = 'ff'
+            self.table[64258] = 'fl'
+            self.table[64259] = 'ffi'
+            self.table[64259] = 'ffl'
         if(self.options.pdftotext):
-            self.T.update(PDFTOTEXT)
+            self.table.update(PDFTOTEXT)
+        if(self.options.userdict):
+            for line in open(self.options.userdict).read().split('\n'):
+                try:
+                    num, replacement = line.split('\t')
+                    self.table[int(num)] = replacement
+                except ValueError:
+                    continue
 
     def translate(self):
         """Use self.t to translate all unicode sequences through
 LaTeX-equivalents."""
-        cnt=open(self.args[0]).read()
-        cnt = cnt.translate(self.T)
+        cnt = open(self.args[0]).read()
+        cnt = cnt.translate(self.table)
         open(self.output,'w').write( cnt )
 
 
 def main():
-    p = wholeProgram()
-    p.setup_table()
-    p.translate()
+    prog = WholeProgram()
+    prog.setup_table()
+    prog.translate()
 
 if __name__ == '__main__':
     main()

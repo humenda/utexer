@@ -1,0 +1,9 @@
+# This file has the format: decimal_number<tab>replacement
+# It overrides the usual unicode-table at this code point. All spaces (except
+# for the one tab) is conserved. Every line without a <tab> is ignored.
+603	\epsilon
+8709	\emptyset
+123	\{
+125	\}
+8202	 
+8201	 
