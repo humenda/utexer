@@ -16,10 +16,18 @@ wurde in Python geschrieben. Das Skript ist nützlich für:
 Das erlaubt blinden Nutzern erstmals Papers oder andere wissenschaftliche Dinge
 herunterzuladen und ohne sehende  Nachkorrektur zu lesen.
 
-Installation
-------------
+Download/Installation
+---------------------
 
-Sie benötigen eine funktionierende Python3-Installation. Sie können
+Sie erhalten eine Kopie mit Git:
+
+    git clone https://github.com/humenda/utexer.git
+
+
+oder hier [eine zip-Datei.](https://codeload.github.com/humenda/utexer/zip/master)
+
+Zur Ausführung von uTeXer benötigen Sie eine funktionierende
+Python3-Installation. Sie können
 
 ./install
 

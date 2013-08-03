@@ -16,10 +16,16 @@ It can be used for:
 So this allows blind users the first time to download papers  or other
 scientific stuff and read it without a sighted person correcting the formulas.
 
-Installation
-------------
+Download/Installation
+---------------------
 
-You need a working python3 installation. You can use
+You can optain a copy by using git:
+
+    git clone https://github.com/humenda/utexer.git
+
+or here [a zip file.](https://codeload.github.com/humenda/utexer/zip/master).
+
+For running uTeXer, you need a working python3 installation. You can use
 
 ./install
 
