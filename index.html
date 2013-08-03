@@ -40,16 +40,20 @@
 <a
 href="http://www.crustulus.de/projects/utexer.de.html">http://www.crustulus.de/projects/utexer.de.html</a></em></p>
 
+
 <h1 id="utexer">uTeXer</h1>
 <h2 id="about-utexer">About uTeXer</h2>
 <p>uTeXer is an helper script written in Python to translate unicode math signs and Latin ligatures into plain text to make them readible for blind computer users. It can be used for:</p>
 <ul>
 <li>translating formulas from web sites or from PDF's into LaTeX signs</li>
-<li>renice the output of the text versions of PDF's (generated e.g. by pdftotext from popplerutils); often Latin ligatures or other those make texts harder to read.</li>
+<li>renice the output of the text versions of PDF's (generated e.g. by pdftotext from popplerutils); those are often Latin ligatures or other signs which make the texts harder to read.</li>
 </ul>
-<p>So this allows blind users the first time to download papers or other scientific stuff and read it without sighted assistance.</p>
-<h2 id="installation">Installation</h2>
-<p>You need a working python3 installation. You can either use</p>
+<p>So this allows blind users the first time to download papers or other scientific stuff and read it without a sighted person correcting the formulas.</p>
+<h2 id="downloadinstallation">Download/Installation</h2>
+<p>You can optain a copy by using git:</p>
+<pre><code>git clone https://github.com/humenda/utexer.git</code></pre>
+<p>or here <a href="https://codeload.github.com/humenda/utexer/zip/master">a zip file.</a>.</p>
+<p>For running uTeXer, you need a working python3 installation. You can use</p>
 <p>./install</p>
 <p>which installs the program to /usr/local/*, or set PREFIX=&quot;/&quot; to install it to /bin and /share directly (and /opt or /usr respectively).</p>
 <p>You can run it also directly from the source(s).</p>
@@ -61,18 +65,23 @@ Options:
   -h, --help            show this help message and exit
   -o FILE, --output=FILE
                         set output file (if unset, overwrite input file)
+  -u FILE, --userdict=FILE
+                        set path to user-defined replacements/additions for
+                        unicode mappings (format described in README)
   -l, --ligature        replace ligatures through normal letters (at least in
                         Latin languages where they are only for better
                         readibility)
   -p, --pdftotext       Replace some signs generated just by PDFtotext</code></pre>
-<h2 id="where-do-the-latex-commands-come-from-how-do-i-customize-them">Where do the LaTeX-commands come from / how do I customize them?</h2>
+<h2 id="where-do-the-latex-commands-come-from-how-do-i-customize-them">Where Do The LaTeX-commands Come From / How Do I Customize Them?</h2>
 <p>The initial unicode table was downloaded from:</p>
 <p>http://www.w3.org/Math/characters/unicode.xml</p>
-<p>At this point of writing, LaTeX-commands can just be overwritten by replacing them in unicode.xml, located next to the script or under /usr/share/utexer/unicode.xml.</p>
+<p>With the -u switch you can supply an additional unicode table to override (or even add) unicode points. The format is simple:</p>
+<pre><code>&lt;decimal_number&gt;&lt;tab&gt;&lt;replacement&gt;</code></pre>
+<p>Example:</p>
+<pre><code>123 \{</code></pre>
+<p>This allows you to customize LaTeX-commands. E.g. I don't like , seems more intuitive for me.</p>
 <h2 id="known-issues">Known Issues</h2>
-<p>As said before, uTeXer can not fully translate formulas. Especially formulas who are bigger than a line, e.g. a fraction, indices and powers are not recognized, just because they are not marked in unicode, but by changing their relative height. This only matters for PDF output, ob web pages, people often use tags to indicate subscripts and so on.</p>
-<p>Over/underlines are also lost!</p>
-
-
+<p>As said before, uTeXer can not fully translate formulas. Especially formulas who are bigger than a line, e.g. a fraction, indices and powers are (often) not recognized, just because they are not marked in unicode, but by changing their relative height. This only matters for PDF output, ob web pages, people often use tags to indicate subscripts and so on.</p>
+<p>Overline and underlines are also lost!</p>
 </body>
 </html>
