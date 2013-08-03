@@ -1,0 +1,83 @@
+uTeXer
+======
+
+Über uTeXer
+-----------
+
+uTeXer ist ein Hilfsskript um mathematische Unicodezeichen und lateinische
+Ligaturen in LaTeX zu konvertieren, damit sie für Blinde lesbar werden; es
+wurde in Python geschrieben. Das Skript ist nützlich für:
+
+- Übersetzen von Formeln von Webseiten oder aus PDFs in LaTeX-Zeichen
+- verschönern der Textversionen von PDFs, wie sie z.B. durch pdftotext (aus den
+  Popplerutils) generiert werden; häufig sind dies lateinische Ligaturen, die
+  den Text schwerer lesbar machen.
+
+Das erlaubt blinden Nutzern erstmals Papers oder andere wissenschaftliche Dinge
+herunterzuladen und ohne sehende  Nachkorrektur zu lesen.
+
+Installation
+------------
+
+Sie benötigen eine funktionierende Python3-Installation. Sie können
+
+./install
+
+ausführen, was das Programm unter /usr/local/* installiert, oder PREFIX auf /usr
+setzen (oder /opt bzw. /) um den Pfad zu ändern.
+
+Sie können es auch direkt aus den Quellen ausführen.
+
+Benutzung von uTeXer
+--------------------
+
+uTeXer ist ein einfaches Programm, die Hilfeseite sollte das Meiste erklären:
+
+    Usage: utexer [options] INPUTFILE
+    
+    Options:
+      -h, --help            show this help message and exit
+      -o FILE, --output=FILE
+                            set output file (if unset, overwrite input file)
+      -u FILE, --userdict=FILE
+                            set path to user-defined replacements/additions for
+                            unicode mappings (format described in README)
+      -l, --ligature        replace ligatures through normal letters (at least in
+                            Latin languages where they are only for better
+                            readibility)
+      -p, --pdftotext       Replace some signs generated just by PDFtotext
+
+Woher kommen die LaTeX-Befehle/wie passe ich diese an?
+------------------------------------------------------
+
+Die ursprüngliche Unicode-Tabelle wurde von
+
+http://www.w3.org/Math/characters/unicode.xml
+
+heruntergeladen.
+
+Mit der -u Option können Sie eine zusätzliche Unicode-Tabelle  angeben, um
+Unicode-Codepunkte zu überschreiben (oder sogar hinzuzufügen). Das Format ist
+einfach:
+
+    <decimal_number><tab><replacement>
+
+Beispiel:
+
+    123	\{
+
+Das erlaubt Ihnen LaTeX-Kommandos anzupassen. Ich mag beispielsweise \varnothing
+nicht und habe es durch das für mich intuitivere \emptyset ersetzt.
+
+
+Bekannte Limitierungen
+----------------------
+
+Wie bereits angemerkt wurde, kann uTeXer keine ganzen Formeln übersetzen.
+Formeln die größer als eine Zeile sind, wie beispielsweise Brüche, Indizes und
+Potenzen werden (häufig) erkannt, weil sie nicht in Unicode notiert werden,
+sondern durch Höhenveränderung erkenntlich gemacht werden. Das ist nur für
+PDF-Ausgaben problematisch, bei HTML werden oft Tags für Indizes und Potenzen genutzt.
+
+Überstreichungen und Unterstreichungen gehen ebenfalls verloren.
+

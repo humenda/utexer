@@ -1,8 +1,8 @@
 uTeXer
-------
+======
 
 About uTeXer
-============
+------------
 
 uTeXer is an helper script written in Python to translate unicode math signs and
 Latin ligatures into plain text to make them readible for blind computer users.
@@ -10,16 +10,16 @@ It can be used for:
 
 - translating formulas from web sites or from PDF's into LaTeX signs
 - renice the output of the text versions of PDF's (generated e.g. by pdftotext
-  from popplerutils); often Latin ligatures or other those make texts harder to
-  read.
+  from popplerutils); those are often Latin ligatures or other signs which make
+  the texts harder to read.
 
 So this allows blind users the first time to download papers  or other
-scientific stuff and read it without sighted assistance.
+scientific stuff and read it without a sighted person correcting the formulas.
 
 Installation
-============
+------------
 
-You need a working python3 installation. You can either use
+You need a working python3 installation. You can use
 
 ./install
 
@@ -29,40 +29,52 @@ which installs the program to /usr/local/*, or set PREFIX="/" to install it to
 You can run it also directly from the source(s).
 
 Using uTeXer
-============
+------------
 
 uTeXer is a simple program, the help screen should explain most:
 
     Usage: utexer [options] INPUTFILE
-
+    
     Options:
       -h, --help            show this help message and exit
       -o FILE, --output=FILE
                             set output file (if unset, overwrite input file)
+      -u FILE, --userdict=FILE
+                            set path to user-defined replacements/additions for
+                            unicode mappings (format described in README)
       -l, --ligature        replace ligatures through normal letters (at least in
                             Latin languages where they are only for better
                             readibility)
       -p, --pdftotext       Replace some signs generated just by PDFtotext
 
 Where Do The LaTeX-commands Come From / How Do I Customize Them?
-================================================================
+----------------------------------------------------------------
 
 The initial unicode table was downloaded from:
 
 http://www.w3.org/Math/characters/unicode.xml
 
-At this  point of writing, LaTeX-commands can just be overwritten by replacing
-them in unicode.xml, located next to the script or under
-/usr/share/utexer/unicode.xml.
+With the -u switch you can supply an additional unicode table to override (or
+even add) unicode points. The format is simple:
+
+    <decimal_number><tab><replacement>
+
+Example:
+
+    123	\{
+
+This allows you to customize LaTeX-commands. E.g. I don't like \varnothing,
+\emptyset seems more intuitive for me.
+
 
 Known Issues
-============
+------------
 
 As said before, uTeXer can not fully translate formulas. Especially formulas who
-are bigger than a line, e.g. a fraction, indices and powers are not recognized,
-just because they are not marked in unicode, but by changing their relative
-height. This only matters for PDF output, ob web pages, people often use tags to
-indicate subscripts and so on.
+are bigger than a line, e.g. a fraction, indices and powers are (often) not
+recognized, just because they are not marked in unicode, but by changing their
+relative height. This only matters for PDF output, ob web pages, people often
+use tags to indicate subscripts and so on.
 
 Overline and underlines are also lost!
 
