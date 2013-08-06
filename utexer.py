@@ -81,6 +81,7 @@ class WholeProgram():
         # translate ligatures?
         if(self.options.ligature):
             self.table[64256] = 'ff'
+            self.table[64257] = 'fi'
             self.table[64258] = 'fl'
             self.table[64259] = 'ffi'
             self.table[64260] = 'ffl'
