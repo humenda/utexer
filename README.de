@@ -89,3 +89,8 @@ PDF-Ausgaben problematisch, bei HTML werden oft Tags für Indizes und Potenzen g
 
 Überstreichungen und Unterstreichungen gehen ebenfalls verloren.
 
+Es gibt Zeichen in der Unicode-Tabelle, welche nicht übersetzt werden sollten
+oder welche zu nicht häufig gebrauchten LaTeX-Kommandos übersetzt werden:
+
+- \\varnothing anstatt zu \\emptyset
+- { } anstatt von \\lbrace und \\rbrace, weil sonst auch Quelltext resetzt wird

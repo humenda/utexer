@@ -84,4 +84,8 @@ use tags to indicate subscripts and so on.
 
 Overline and underlines are also lost!
 
+There are signs in the unicode table which should not be translated or are
+translated to not commonly used LaTeX-commands:
 
+- \\varnothing instead of the more common \\emptyset
+- { } instead of \\lbrace and \\rbrace, since source code is also replaced
