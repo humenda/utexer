@@ -83,7 +83,7 @@ class WholeProgram():
             self.table[64256] = 'ff'
             self.table[64258] = 'fl'
             self.table[64259] = 'ffi'
-            self.table[64259] = 'ffl'
+            self.table[64260] = 'ffl'
         if(self.options.pdftotext):
             self.table.update(PDFTOTEXT)
         if(self.options.userdict):
