@@ -100,7 +100,18 @@ class WholeProgram():
 LaTeX-equivalents."""
         cnt = open(self.args[0]).read()
         cnt = cnt.translate(self.table)
+        if(self.options.pdftotext):
+            cnt = self.replace_dieresis(cnt)
         open(self.output,'w').write( cnt )
+    
+    def replace_dieresis(self, cnt):
+        """Replace dieresis occuring when using pdftotext with German texts set
+        in LaTeX, inproperly."""
+        R = {'\xa8o':'\xf6', '\xa8u':'\xfc', '\xa8a': '\xe4',  \
+             '\xa8O':'\xf6', '\xa8U':'\xfc', '\xa8A': '\xe4' }
+        for r in R:
+            cnt = cnt.replace(r, R[r])
+        return cnt
 
 
 def main():
