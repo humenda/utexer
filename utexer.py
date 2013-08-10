@@ -16,33 +16,32 @@ class WholeProgram():
 ;-)."""
     def __init__(self):
         """Set up cmd parser."""
-        usage = "usage: %prog [options] INPUTFILE"
+        usage = """usage: %prog [options] INPUTFILE
+
+If no output file is specified with the -o option, the input file will be
+overwritten. If no input file is specified, stdin/stdout will be used (but you
+can redirect stdout with -o too)."""
         parser = OptionParser(usage=usage)
-        parser.add_option("-o", "--output", dest="output",
-                  help="set output file (if unset, overwrite input file)",
-                  metavar="FILE")
-        parser.add_option("-u", "--userdict", dest="userdict",
-                  help="set path to user-defined replacements/additions for "+\
-                          "unicode mappings (format described in README)",
-                  metavar="FILE", default=None)
+        parser.add_option("-e", "--encoding", dest="encoding",
+                  help="Set encoding for stdin (default UTF-8)",
+                  metavar="ENC", default='UTF-8')
         parser.add_option("-l", "--ligature",
                   action="store_true", dest="ligature", default=False,
                   help='replace ligatures through normal letters (at least in'+\
                           ' Latin languages where they are only for better '+\
                           'readibility)')
+        parser.add_option("-o", "--output", dest="output",
+                  help="set output file (if unset, overwrite input file)",
+                  metavar="FILE")
         parser.add_option("-p", "--pdftotext",
                   action="store_true", dest="pdftotext", default=False,
                   help='Replace some signs generated just by PDFtotext')
-        (self.options, self.args) = parser.parse_args()
-        if(len(self.args) < 1):
-            print("You must at least specify an input file.\n")
-            parser.print_help()
-            sys.exit(0)
-        if(self.options.output == None):
-            self.output = self.args[0]
-        else:
-            self.output = self.options.output
+        parser.add_option("-u", "--userdict", dest="userdict",
+                  help="set path to user-defined replacements/additions for "+\
+                          "unicode mappings (format described in README)",
+                  metavar="FILE", default=None)
 
+        (self.options, self.args) = parser.parse_args()
         # translation table
         self.table = {}
 
@@ -98,12 +97,43 @@ class WholeProgram():
     def translate(self):
         """Use self.t to translate all unicode sequences through
 LaTeX-equivalents."""
-        cnt = open(self.args[0]).read()
+        try:
+            cnt = self.read_input()
+        except UnicodeDecodeError:
+            print("Could not decode input stream, wrong encoding?")
+            sys.exit(0)
+        # the actual translation
         cnt = cnt.translate(self.table)
         if(self.options.pdftotext):
             cnt = self.replace_dieresis(cnt)
-        open(self.output,'w').write( cnt )
-    
+
+        self.write_output( cnt )
+
+
+    def read_input(self):
+        """Read input from stdin or file, as appropriate. Decode it to unicode
+using self.options.encoding."""
+        if(len(self.args) < 1):
+            self.input = sys.stdin.detach()
+        else:
+            self.input = open( self.args[0], 'rb' )
+        cnt = self.input.read().decode( self.options.encoding )
+        self.input.close()
+        return cnt
+
+    def write_output(self, string):
+        """Take an unicode string and write it to file / stdout, as appropriate.
+Use self.options.encoding as file encoding."""
+        if(self.options.output == None):
+            if( len(self.args) < 1 ):
+                output = sys.stdout.detach()
+            else:
+                output = open(self.args[0], 'wb')
+        else:
+            output = open(self.options.output, 'wb')
+        output.write( string.encode( self.options.encoding ) )
+        output.close()
+
     def replace_dieresis(self, cnt):
         """Replace dieresis occuring when using pdftotext with German texts set
         in LaTeX, inproperly."""
