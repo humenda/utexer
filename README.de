@@ -74,8 +74,8 @@ Beispiel:
 
     123	\{
 
-Das erlaubt Ihnen LaTeX-Kommandos anzupassen. Ich mag beispielsweise \varnothing
-nicht und habe es durch das für mich intuitivere \emptyset ersetzt.
+Das erlaubt Ihnen LaTeX-Kommandos anzupassen. Ich mag beispielsweise \\varnothing
+nicht und habe es durch das für mich intuitivere \\emptyset ersetzt.
 
 
 Bekannte Limitierungen

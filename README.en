@@ -69,8 +69,8 @@ Example:
 
     123	\{
 
-This allows you to customize LaTeX-commands. E.g. I don't like \varnothing,
-\emptyset seems more intuitive for me.
+This allows you to customize LaTeX-commands. E.g. I don't like \\varnothing,
+\\emptyset seems more intuitive for me.
 
 
 Known Issues
