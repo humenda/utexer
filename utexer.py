@@ -74,7 +74,7 @@ can redirect stdout with -o too)."""
                         else:
                             ids = [i_d]
                         for i_d in ids:
-                            if(not i_d <= 128): # do not translate ascii!
+                            if(not int(i_d, 16) <= 128): # do not translate ascii!
                                 self.table[int(i_d, 16)] = latex.text
                 except (KeyError, IndexError):
                     continue
