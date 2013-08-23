@@ -101,4 +101,4 @@ Es gibt Zeichen in der Unicode-Tabelle, welche nicht übersetzt werden sollten
 oder welche zu nicht häufig gebrauchten LaTeX-Kommandos übersetzt werden:
 
 - \\varnothing anstatt zu \\emptyset
-- { } anstatt von \\lbrace und \\rbrace, weil sonst auch Quelltext resetzt wird
+- { } anstatt von \\lbrace und \\rbrace, weil sonst auch Quelltext ersetzt wird
