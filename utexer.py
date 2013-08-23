@@ -36,6 +36,9 @@ can redirect stdout with -o too)."""
         parser.add_option("-p", "--pdftotext",
                   action="store_true", dest="pdftotext", default=False,
                   help='Replace some signs generated just by PDFtotext')
+        parser.add_option("-s", "--strip-newpage",
+                  action="store_true", dest="strip_newline", default=False,
+                  help='Strip the newpage character')
         parser.add_option("-u", "--userdict", dest="userdict",
                   help="set path to user-defined replacements/additions for "+\
                           "unicode mappings (format described in README)",
@@ -94,6 +97,9 @@ can redirect stdout with -o too)."""
                     self.table[int(num)] = replacement
                 except ValueError:
                     continue
+        # strip new page (form eed)?
+        if(self.options.strip_newline):
+            self.table[12] = '\n'
 
     def translate(self):
         """Use self.t to translate all unicode sequences through
