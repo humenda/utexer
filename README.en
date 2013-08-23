@@ -41,17 +41,24 @@ uTeXer is a simple program, the help screen should explain most:
 
     Usage: utexer [options] INPUTFILE
     
+    If no output file is specified with the -o option, the input file will be
+    overwritten. If no input file is specified, stdin/stdout will be used (but you
+    can redirect stdout with -o too).
+    
     Options:
       -h, --help            show this help message and exit
-      -o FILE, --output=FILE
-                            set output file (if unset, overwrite input file)
-      -u FILE, --userdict=FILE
-                            set path to user-defined replacements/additions for
-                            unicode mappings (format described in README)
+      -e ENC, --encoding=ENC
+                            Set encoding for stdin (default UTF-8)
       -l, --ligature        replace ligatures through normal letters (at least in
                             Latin languages where they are only for better
                             readibility)
+      -o FILE, --output=FILE
+                            set output file (if unset, overwrite input file)
       -p, --pdftotext       Replace some signs generated just by PDFtotext
+      -s, --strip-newpage   Strip the newpage character
+      -u FILE, --userdict=FILE
+                            set path to user-defined replacements/additions for
+                            unicode mappings (format described in README)
 
 Where Do The LaTeX-commands Come From / How Do I Customize Them?
 ----------------------------------------------------------------
