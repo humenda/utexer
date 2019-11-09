@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-import sys, os
+"""uTeXer -- replace unicode signs through LaTeX equivalents."""
 from optparse import OptionParser
+import os
+import sys
 import xml.etree.ElementTree as ET
 
-"""uTeXer -- replace unicode signs through LaTeX equivalents."""
 
 # A dictionary of unicode signs which one can get when using pdftotext."
 
@@ -36,27 +37,28 @@ can redirect stdout with -o too)."""
         parser.add_option("-p", "--pdftotext",
                   action="store_true", dest="pdftotext", default=False,
                   help='Replace some signs generated just by PDFtotext')
-        parser.add_option("-s", "--strip-newpage",
-                  action="store_true", dest="strip_newline", default=False,
-                  help='Strip the newpage character')
+        parser.add_option("-s", "--strip-pagebreak",
+                  action="store_true", dest="strip_pagebreak", default=False,
+                  help='Strip the pagebreak character')
         parser.add_option("-u", "--userdict", dest="userdict",
                   help="set path to user-defined replacements/additions for "+\
                           "unicode mappings (format described in README)",
                   metavar="FILE", default=None)
 
+        self.input = None
         (self.options, self.args) = parser.parse_args()
         # translation table
         self.table = {}
 
-    def setup_table(self):
-        """Set up unicode translation table by parsing XML file and adding
-(Latin) ligatures, if wished."""
+    def parse_unicode_table(self):
+        """Parse the XML table containing unicode symbols and their LaTeX
+        equivalent."""
         # search unicode.xml in the same directory:
         spath = os.path.dirname(os.path.realpath(__file__))
-        if(os.path.exists(os.path.join(spath, 'unicode.xml'))):
+        if os.path.exists(os.path.join(spath, 'unicode.xml')):
             unicodexml = os.path.join(spath, 'unicode.xml')
-        elif(os.path.exists(os.path.join(spath, '..', 'share', 'utexer',
-                'unicode.xml'))):
+        elif os.path.exists(os.path.join(spath, '..', 'share', 'utexer',
+                'unicode.xml')):
             unicodexml = os.path.join(spath, '..', 'share', 'utexer', \
                         'unicode.xml')
         else:
@@ -65,40 +67,43 @@ can redirect stdout with -o too)."""
 
         root = ET.fromstring( open( unicodexml ).read())
         for child in root:
-            if(child.tag == 'character'):
-                attr = child.attrib
+            attr = child.attrib
+            if child.tag == 'character' and attr.get('mode') == 'math':
                 try:
-                    if(attr['mode'] == 'math'):
-                        latex = [e for e in child.getchildren() \
-                                    if(e.tag == 'latex')][0]
-                        i_d = attr['id'][1:]
-                        if(i_d.find('-')>0):
-                            ids = i_d[1:].split('-')
-                        else:
-                            ids = [i_d]
-                        for i_d in ids:
-                            if(not int(i_d, 16) <= 128): # do not translate ascii!
-                                self.table[int(i_d, 16)] = latex.text
+                    latex = [e for e in list(child) if e.tag == 'latex'][0]
+                    i_d = attr['id'][1:]
+                    if i_d.find('-')>0:
+                        ids = i_d[1:].split('-')
+                    else:
+                        ids = [i_d]
+                    for i_d in ids:
+                        if int(i_d, 16) >= 128: # do not translate ascii!
+                            self.table[int(i_d, 16)] = latex.text
                 except (KeyError, IndexError):
                     continue
+
+    def setup_table(self):
+        """Set up unicode translation table by parsing XML file and adding
+(Latin) ligatures, if wished."""
+        self.parse_unicode_table() # initialise self.table()
         # translate ligatures?
-        if(self.options.ligature):
+        if self.options.ligature:
             self.table[64256] = 'ff'
             self.table[64257] = 'fi'
             self.table[64258] = 'fl'
             self.table[64259] = 'ffi'
             self.table[64260] = 'ffl'
-        if(self.options.pdftotext):
+        if self.options.pdftotext:
             self.table.update(PDFTOTEXT)
-        if(self.options.userdict):
+        if self.options.userdict:
             for line in open(self.options.userdict).read().split('\n'):
                 try:
                     num, replacement = line.split('\t')
                     self.table[int(num)] = replacement
                 except ValueError:
                     continue
-        # strip new page (form eed)?
-        if(self.options.strip_newline):
+        # strip new line
+        if self.options.strip_pagebreak:
             self.table[12] = '\n'
 
     def translate(self):
@@ -111,7 +116,7 @@ LaTeX-equivalents."""
             sys.exit(0)
         # the actual translation
         cnt = cnt.translate(self.table)
-        if(self.options.pdftotext):
+        if self.options.pdftotext:
             cnt = self.replace_dieresis(cnt)
 
         self.write_output( cnt )
@@ -120,7 +125,7 @@ LaTeX-equivalents."""
     def read_input(self):
         """Read input from stdin or file, as appropriate. Decode it to unicode
 using self.options.encoding."""
-        if(len(self.args) < 1):
+        if not self.args:
             self.input = sys.stdin.detach()
         else:
             self.input = open( self.args[0], 'rb' )
@@ -131,8 +136,8 @@ using self.options.encoding."""
     def write_output(self, string):
         """Take an unicode string and write it to file / stdout, as appropriate.
 Use self.options.encoding as file encoding."""
-        if(self.options.output == None):
-            if( len(self.args) < 1 ):
+        if not self.options.output:
+            if not self.args:
                 output = sys.stdout.detach()
             else:
                 output = open(self.args[0], 'wb')
