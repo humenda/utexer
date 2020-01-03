@@ -55,7 +55,7 @@ uTeXer is a simple program, the help screen should explain most:
       -o FILE, --output=FILE
                             set output file (if unset, overwrite input file)
       -p, --pdftotext       Replace some signs generated just by PDFtotext
-      -s, --strip-newpage   Strip the newpage character
+      -s, --strip-pagebreak Strip the newpage character
       -u FILE, --userdict=FILE
                             set path to user-defined replacements/additions for
                             unicode mappings (format described in README)
